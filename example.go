@@ -9,13 +9,25 @@ import (
 	"github.com/lewisdalwin/go-httpclient/gohttp"
 )
 
+// singeton (one instance)
+var (
+	httpClient = gohttp.New()
+)
+
 func main() {
+	// reuse the client
+	getData()
+	getData()
+	getData()
+}
+
+func getData() {
 	url := "https://api.github.com"
-	client := gohttp.New()
 	// construct the headers
 	headers := make(http.Header)
 	headers.Set("Authorization", "Bearer ABC-123")
-	res, err := client.Get(url, headers)
+	// use the singleton client to make the request
+	res, err := httpClient.Get(url, headers)
 	if err != nil {
 		panic(err)
 	}
