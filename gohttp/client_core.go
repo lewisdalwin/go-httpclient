@@ -14,7 +14,13 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	if err != nil {
 		return nil, errors.New("unable to create a new request")
 	}
-	// TODO: set the headers
+	// Add the common headers to the request
+	for key, value := range c.headers {
+		if len(value) > 0 {
+			req.Header.Set(key, value[0])
+		}
+	}
+	// Add the custom headers to the request
 	for key, value := range headers {
 		if len(value) > 0 {
 			req.Header.Set(key, value[0])
