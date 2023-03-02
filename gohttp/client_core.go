@@ -14,20 +14,25 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	if err != nil {
 		return nil, errors.New("unable to create a new request")
 	}
-	// Add the common headers to the request
-	for key, value := range c.headers {
-		if len(value) > 0 {
-			req.Header.Set(key, value[0])
-		}
-	}
-	// Add the custom headers to the request
-	for key, value := range headers {
-		if len(value) > 0 {
-			req.Header.Set(key, value[0])
-		}
-	}
-
+	req.Header = c.getRequestHeaders(headers)
 	// issue the request
 	return client.Do(req)
+}
 
+func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
+	result := make(http.Header)
+	// Add the common headers to the request
+	for key, value := range c.Headers {
+		if len(value) > 0 {
+			result.Set(key, value[0])
+		}
+	}
+
+	// Add the custom headers to the request
+	for key, value := range requestHeaders {
+		if len(value) > 0 {
+			result.Set(key, value[0])
+		}
+	}
+	return result
 }

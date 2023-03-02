@@ -11,8 +11,16 @@ import (
 
 // singeton (one instance)
 var (
-	httpClient = gohttp.New()
+	githubHttpClient = getGithubClient()
 )
+
+func getGithubClient() gohttp.HttpClient {
+	client := gohttp.New()
+	commonHeaders := make(http.Header)
+	commonHeaders.Set("Authorization", "Bearer ABC-123")
+	client.SetHeaders(commonHeaders)
+	return client
+}
 
 func main() {
 	// reuse the client
@@ -25,9 +33,8 @@ func getData() {
 	url := "https://api.github.com"
 	// construct the headers
 	headers := make(http.Header)
-	headers.Set("Authorization", "Bearer ABC-123")
 	// use the singleton client to make the request
-	res, err := httpClient.Get(url, headers)
+	res, err := githubHttpClient.Get(url, headers)
 	if err != nil {
 		panic(err)
 	}

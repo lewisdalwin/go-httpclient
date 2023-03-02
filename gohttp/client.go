@@ -25,12 +25,14 @@ type HttpClient interface {
 	// any headers that are to be included in the request.
 	// There is no body in a Delete request
 	Delete(url string, headers http.Header) (*http.Response, error)
+
+	SetHeaders(headers http.Header)
 }
 
 // create a private type based on the interface
 // needed to implement all the method signatures
 type httpClient struct {
-	headers http.Header
+	Headers http.Header
 }
 
 // create a function to create a new instance
@@ -38,6 +40,10 @@ type httpClient struct {
 func New() HttpClient {
 	client := &httpClient{}
 	return client
+}
+
+func (c *httpClient) SetHeaders(headers http.Header) {
+	c.Headers = headers
 }
 
 // implement the methods on the type to satisfy the interface
